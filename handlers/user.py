@@ -26,6 +26,8 @@ async def _require_subscription(
     bot: Bot,
     config: Config,
 ) -> bool:
+    if callback.from_user.id == config.admin_id:
+        return True  # Администратор не нуждается в подписке
     if not config.channel_id or not config.channel_link:
         return True
     if await _is_subscribed(bot, callback.from_user.id, config.channel_id):
