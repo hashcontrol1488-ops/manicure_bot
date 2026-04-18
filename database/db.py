@@ -10,6 +10,12 @@ class Database:
         self.conn = sqlite3.connect(db_path)
         self.conn.row_factory = sqlite3.Row
         self._create_tables()
+        # Log database status
+        cursor = self.conn.cursor()
+        work_days_count = cursor.execute("SELECT COUNT(*) FROM work_days").fetchone()[0]
+        time_slots_count = cursor.execute("SELECT COUNT(*) FROM time_slots").fetchone()[0]
+        bookings_count = cursor.execute("SELECT COUNT(*) FROM bookings").fetchone()[0]
+        logging.info(f"Database initialized: {work_days_count} work_days, {time_slots_count} time_slots, {bookings_count} bookings")
 
     def _create_tables(self) -> None:
         cursor = self.conn.cursor()
