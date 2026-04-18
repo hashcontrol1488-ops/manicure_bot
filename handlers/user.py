@@ -192,6 +192,7 @@ async def booking_pick_date(callback: CallbackQuery, state: FSMContext, db: Data
 
 @router.callback_query(BookingStates.choosing_time, F.data.startswith("time:"))
 async def booking_pick_time(callback: CallbackQuery, state: FSMContext) -> None:
+    await callback.answer()  # Ответить сразу, чтобы избежать зависания
     logging.info(f"Callback data: {callback.data}")
     try:
         _, date, time = callback.data.split(":", 2)
@@ -202,11 +203,9 @@ async def booking_pick_time(callback: CallbackQuery, state: FSMContext) -> None:
         logging.info("Set state to entering_name")
         await callback.message.answer("Введите ваше имя 👇")
         logging.info("Sent message")
-        await callback.answer()
         logging.info("Time selection handled successfully")
     except Exception as e:
         logging.error(f"Error in booking_pick_time: {e}")
-        await callback.answer()
 
 
 @router.message(BookingStates.entering_name)
