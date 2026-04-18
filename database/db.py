@@ -7,6 +7,7 @@ from typing import Any
 
 class Database:
     def __init__(self, db_path: str) -> None:
+        logging.info(f"Initializing database at path: {db_path}")
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
         self.conn = sqlite3.connect(db_path)
         self.conn.row_factory = sqlite3.Row
@@ -17,6 +18,7 @@ class Database:
         time_slots_count = cursor.execute("SELECT COUNT(*) FROM time_slots").fetchone()[0]
         bookings_count = cursor.execute("SELECT COUNT(*) FROM bookings").fetchone()[0]
         logging.info(f"Database initialized: {work_days_count} work_days, {time_slots_count} time_slots, {bookings_count} bookings")
+        logging.info(f"DB file exists: {os.path.exists(db_path)}, size: {os.path.getsize(db_path) if os.path.exists(db_path) else 0} bytes")
 
     def _create_tables(self) -> None:
         cursor = self.conn.cursor()
