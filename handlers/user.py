@@ -191,6 +191,7 @@ async def booking_pick_date(callback: CallbackQuery, state: FSMContext, db: Data
 
 @router.callback_query(BookingStates.choosing_time, F.data.startswith("time:"))
 async def booking_pick_time(callback: CallbackQuery, state: FSMContext) -> None:
+    logging.info(f"Callback data: {callback.data}")
     _, date, time = callback.data.split(":", 2)
     await state.update_data(date=date, time=time)
     await state.set_state(BookingStates.entering_name)
