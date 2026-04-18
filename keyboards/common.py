@@ -48,5 +48,6 @@ def admin_menu_kb() -> InlineKeyboardMarkup:
             [InlineKeyboardButton(text="Открыть день", callback_data="admin_open_day")],
             [InlineKeyboardButton(text="Расписание на дату", callback_data="admin_schedule")],
             [InlineKeyboardButton(text="Отменить запись клиента", callback_data="admin_cancel_booking")],
+            [InlineKeyboardButton(text="Сгенерировать расписание на год", callback_data="admin_generate_schedule")],
         ]
     )

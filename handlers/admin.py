@@ -1,6 +1,7 @@
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
+import datetime
 
 from config import Config
 from database.db import Database
@@ -201,6 +202,31 @@ async def admin_cancel_booking_finish(
     scheduler.remove_reminder(booking["reminder_job_id"])
     await message.answer("Запись клиента отменена ✅")
     await state.clear()
+
+
+@router.callback_query(F.data == "admin_generate_schedule")
+async def admin_generate_schedule(callback: CallbackQuery, config: Config, db: Database) -> None:
+    if not _is_admin(callback.from_user.id, config):
+        await callback.answer("Недостаточно прав", show_alert=True)
+        return
+    await callback.message.answer("Генерирую расписание на год вперед...")
+    today = datetime.date.today()
+    end_date = today + datetime.timedelta(days=365)
+    current_date = today
+    added_days = 0
+    added_slots = 0
+    while current_date <= end_date:
+        if current_date.weekday() < 5:  # Понедельник-пятница
+            if db.add_work_day(current_date.isoformat()):
+                added_days += 1
+                # Добавить слоты с 9:00 до 18:00 с шагом 1 час
+                for hour in range(9, 18):
+                    time_str = f"{hour:02d}:00"
+                    if db.add_time_slot(current_date.isoformat(), time_str):
+                        added_slots += 1
+        current_date += datetime.timedelta(days=1)
+    await callback.message.answer(f"Расписание сгенерировано: {added_days} дней, {added_slots} слотов.")
+    await callback.answer()
 
 
 @router.callback_query(F.data.startswith("admin_"))
