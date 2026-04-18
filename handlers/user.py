@@ -194,9 +194,13 @@ async def booking_pick_time(callback: CallbackQuery, state: FSMContext) -> None:
     logging.info(f"Callback data: {callback.data}")
     try:
         _, date, time = callback.data.split(":", 2)
+        logging.info("Parsed date and time")
         await state.update_data(date=date, time=time)
+        logging.info("Updated state data")
         await state.set_state(BookingStates.entering_name)
+        logging.info("Set state to entering_name")
         await callback.message.answer("Введите ваше имя 👇")
+        logging.info("Sent message")
         await callback.answer()
         logging.info("Time selection handled successfully")
     except Exception as e:
