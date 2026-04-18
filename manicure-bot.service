@@ -1,0 +1,14 @@
+[Unit]
+Description=Manicure Bot
+After=network.target
+
+[Service]
+Type=simple
+User=your_user
+WorkingDirectory=/path/to/manicure_bot
+ExecStart=/path/to/python /path/to/manicure_bot/bot.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
