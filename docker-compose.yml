@@ -6,5 +6,8 @@ services:
     env_file:
       - .env
     volumes:
-      - ./database:/app/database
+      - manicure_db:/app/database
     restart: unless-stopped
+
+volumes:
+  manicure_db:
